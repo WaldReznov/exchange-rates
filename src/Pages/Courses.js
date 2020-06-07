@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import classes from './App.module.css';
-import Convereter from './components/Converter/Convereter'
 
 import { connect } from 'react-redux';
 import { getAllRates, addToFavorite } from './store/actions/actionCreators';
@@ -10,14 +9,6 @@ class App extends Component{
   componentDidMount() {
     this.props.getAllRates();
     console.log(this.props)
-  }
-
-  componentDidUpdate() {
-    console.log('this.props.rates.rates', this.props.rates.rates.rates)
-  }
-
-  componentWillUpdate() {
-    console.log(this.props);
   }
 
   createRatesRow = (rate, course, iso, numbers, code, favorite) => {
@@ -76,12 +67,9 @@ class App extends Component{
     }
     
     return (
-      <div className={classes.App}>
-        <table>
-          {sortRates}
-        </table>
-        <Convereter />
-      </div>
+      <table>
+        {sortRates}
+      </table>
     );
   }
 }
