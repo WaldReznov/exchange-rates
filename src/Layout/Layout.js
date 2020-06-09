@@ -1,25 +1,9 @@
 import React, {Component} from 'react';
 import classes from './Layout.module.css';
 import { connect } from 'react-redux';
+import {NavLink} from 'react-router-dom'
 
 class Layout extends Component {
-
-  state = {
-    menu: false
-  }
-
-  toggleMenuHandler = () => {
-    this.setState({
-      menu: !this.state.menu
-    })
-  }
-
-  menuCloseHandler = () => {
-    this.setState({
-      menu: false
-    })
-  }
-
   render() {
     return (
       <div className={classes.layout}>
@@ -29,9 +13,9 @@ class Layout extends Component {
 
         <nav>
           <ul>
-            <li className={classes.active}>Home</li>
-            <li>Courses</li>
-            <li>Exchange</li>
+            <li><NavLink activeClassName={classes.active} exact to="/">Главная</NavLink></li>
+            <li><NavLink activeClassName={classes.active} to="/courses">Курсы</NavLink></li>
+            <li><NavLink activeClassName={classes.active} to="/converter">Конвертер</NavLink></li>
           </ul>          
         </nav>
       </div>

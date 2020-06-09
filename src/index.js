@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import {BrowserRouter} from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import {createStore, compose, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
@@ -24,12 +24,12 @@ const store = createStore(
 );
 
 ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <Layout>
-        <App />
-      </Layout>
-    </BrowserRouter>
-  </Provider>,
+  <Router>
+    <Provider store={store}>
+        <Layout>
+          <App />
+        </Layout>
+    </Provider>
+  </Router>,
   document.getElementById('root')
 );

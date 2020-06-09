@@ -1,87 +1,29 @@
 import React, { Component } from 'react';
 import classes from './App.module.css';
-import Convereter from './components/Converter/Convereter'
+import Converter from './components/Converter/Converter'
 
 import { connect } from 'react-redux';
 import { getAllRates, addToFavorite } from './store/actions/actionCreators';
+import Courses from './components/Courses/Courses';
+import {Switch, Route} from 'react-router-dom'
+import Home from './components/Home/Home';
+
 
 class App extends Component{
 
   componentDidMount() {
     this.props.getAllRates();
-    console.log(this.props)
   }
-
-  componentDidUpdate() {
-    console.log('this.props.rates.rates', this.props.rates.rates.rates)
-  }
-
-  componentWillUpdate() {
-    console.log(this.props);
-  }
-
-  createRatesRow = (rate, course, iso, numbers, code, favorite) => {
-    if (favorite === undefined) {
-      favorite = false;
-    }
-
-    let urlImage = (favorite === false) ? 'https://image.flaticon.com/icons/png/512/3004/3004102.png' 
-                                        : 'https://image.flaticon.com/icons/png/512/3004/3004112.png';
-    
-    return (
-      <tr className='rate-row' key={code}>
-        <td>
-          <img 
-            className={classes.star} 
-            src={urlImage}
-            onClick={() => this.props.addToFavorite(iso, favorite)}
-            alt="favorite"/>
-        </td>
-        <td>{rate}</td>
-        <td>{course}</td>
-        <td>{iso}</td>
-        <td>{numbers}</td>
-      </tr>
-    )
-  } 
-
-  createRatesHeader = (rate, course, code, numbers, key) => {
-    return (
-      <tr className='rate-row' key={key}>
-        <th>Избранные</th>
-        <th>{rate}</th>
-        <th>{course}</th>
-        <th>{code}</th>
-        <th>{numbers}</th>
-      </tr>
-    )
-  } 
 
   render() {
-    let rates = this.props.rates.rates;
-    let sortRates;
-    if(rates !== null) {
-      let favoriteRates = rates.map((item) => {
-        if(item.favorite) {
-          return this.createRatesRow(item.name, item.rate, item.iso, item.quantity, item.code, item.favorite)
-        }
-      }).filter((item) => item !== undefined)
-
-      let notFavoriteRates = rates.map((item) => {
-        if(!item.favorite) {
-          return this.createRatesRow(item.name, item.rate, item.iso, item.quantity, item.code, item.favorite)
-        }
-      }).filter((item) => item !== undefined)
-      sortRates = [this.createRatesHeader('Валюта', 'Курс', 'Код', 'Единиц', 0), ...favoriteRates, ...notFavoriteRates];
-    }
-    
     return (
-      <div className={classes.App}>
-        <table>
-          {sortRates}
-        </table>
-        <Convereter />
-      </div>
+        <div className={classes.App}>
+          <Switch>
+            <Route path='/converter' component={Converter}/>
+            <Route path='/courses' component={Courses}/>
+            <Route path='/' component={Home}/>
+          </Switch>
+        </div>
     );
   }
 }

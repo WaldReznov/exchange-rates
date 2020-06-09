@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
-import classes from './App.module.css';
+import classes from './Courses.module.css';
 
 import { connect } from 'react-redux';
-import { getAllRates, addToFavorite } from './store/actions/actionCreators';
+import { getAllRates, addToFavorite } from '../../store/actions/actionCreators';
 
-class App extends Component{
-
-  componentDidMount() {
-    this.props.getAllRates();
-    console.log(this.props)
-  }
-
+class Courses extends Component{
   createRatesRow = (rate, course, iso, numbers, code, favorite) => {
     if (favorite === undefined) {
       favorite = false;
@@ -39,7 +33,7 @@ class App extends Component{
   createRatesHeader = (rate, course, code, numbers, key) => {
     return (
       <tr className='rate-row' key={key}>
-        <th>Избранные</th>
+        <th></th>
         <th>{rate}</th>
         <th>{course}</th>
         <th>{code}</th>
@@ -67,18 +61,18 @@ class App extends Component{
     }
     
     return (
-      <table>
-        {sortRates}
-      </table>
+      <div className={classes.tableContainer}>
+        <table>
+          {sortRates}
+        </table>
+      </div>
     );
   }
 }
 
 function mapStateToProps(state) {
   return {
-    rates: state.rates,
-    fromRate: state.fromRate,
-    toRate: state.toRate
+    rates: state.rates
   }
 }
 
@@ -89,4 +83,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(Courses);
