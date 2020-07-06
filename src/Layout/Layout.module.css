@@ -3,18 +3,23 @@
 }
 
 main {
-  padding-bottom: 101px;
+  min-height: calc(100vh - 160px);
+  padding-bottom: 160px;
 }
 
-nav {
+.navContainer {
+  background: #222;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  margin-top: 25px;
+}
+
+nav {
   background: #fff;
-  border-top-left-radius: 40px;
-  border-top-right-radius: 40px;
+  border-radius: 40px;
+  height: 100px;
+  margin: 30px;
 }
 
 ul {
@@ -48,4 +53,13 @@ a.active:after {
 
 a.active {
   color: #f7be8e;
+}
+
+
+@media screen and (max-width: 450px) {
+  ul {
+    align-items: center;
+    height: 100%;
+    padding: 0;
+  }
 }

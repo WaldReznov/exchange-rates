@@ -1,0 +1,28 @@
+.graphic {
+  width: 1080px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.title {
+  font-size: 30px;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 20px;
+  text-transform: capitalize;
+}
+
+.graphicItem {
+  margin-bottom: 35px;
+}
+
+.graphicItem:last-child {
+  margin-bottom: 0;
+}
+
+@media screen and (max-width: 1080px) {
+  .graphic {
+    width: 95%;
+    margin: 0 2.5%;
+  }
+}

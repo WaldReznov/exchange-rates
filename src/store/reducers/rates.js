@@ -1,10 +1,12 @@
-import { INIT_EXCHANGE_RATES, CONVERT_RATES, ADD_TO_FAVORITE } from '../actions/actionTypes'
+import { INIT_EXCHANGE_RATES, CONVERT_RATES, ADD_TO_FAVORITE, INIT_GRAPHIC_RATES } from '../actions/actionTypes'
 
 const initialState = {
   rates: null,
   fromRate: null,
   toRate: null,
-  rate: 0
+  rate: 0,
+  pageYOffset: 0,
+  graphicRates: []
 }
 
 const rates = (state = initialState, action) => {
@@ -22,7 +24,13 @@ const rates = (state = initialState, action) => {
     case ADD_TO_FAVORITE: 
       return {
         ...state,
+        pageYOffset: action.pageYOffset,
         rates: action.rates
+      }
+    case INIT_GRAPHIC_RATES: 
+      return {
+        ...state,
+        graphicRates: action.graphicRates
       }
     default: 
       return state

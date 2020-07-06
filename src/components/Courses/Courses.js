@@ -42,6 +42,12 @@ class Courses extends Component{
     )
   } 
 
+  componentDidUpdate(prevProps) {
+    if (this.props.rates.pageYOffset !== 0) {
+      window.scrollTo(0, this.props.rates.pageYOffset)
+    }
+  }
+
   render() {
     let rates = this.props.rates.rates;
     let sortRates;

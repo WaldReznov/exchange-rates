@@ -11,13 +11,15 @@ class Layout extends Component {
           {this.props.children}
         </main>
 
-        <nav>
-          <ul>
-            <li><NavLink activeClassName={classes.active} exact to="/">Главная</NavLink></li>
-            <li><NavLink activeClassName={classes.active} to="/courses">Курсы</NavLink></li>
-            <li><NavLink activeClassName={classes.active} to="/converter">Конвертер</NavLink></li>
-          </ul>          
-        </nav>
+        <div className={classes.navContainer}>
+          <nav>
+            <ul>
+              <li><NavLink activeClassName={classes.active} exact to="/">Главная</NavLink></li>
+              <li><NavLink activeClassName={classes.active} to="/courses">Курсы</NavLink></li>
+              <li><NavLink activeClassName={classes.active} to="/converter">Конвертер</NavLink></li>
+            </ul>          
+          </nav>
+        </div>
       </div>
     )
   }
