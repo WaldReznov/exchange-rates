@@ -1,4 +1,4 @@
-import { INIT_EXCHANGE_RATES, CONVERT_RATES, ADD_TO_FAVORITE, INIT_GRAPHIC_RATES } from '../actions/actionTypes'
+import { INIT_EXCHANGE_RATES, CONVERT_RATES, ADD_TO_FAVORITE, INITIAL_APP } from '../actions/actionTypes'
 
 const initialState = {
   rates: null,
@@ -6,6 +6,7 @@ const initialState = {
   toRate: null,
   rate: 0,
   pageYOffset: 0,
+  currencyCodes: [840, 978, 985],
   graphicRates: []
 }
 
@@ -27,10 +28,11 @@ const rates = (state = initialState, action) => {
         pageYOffset: action.pageYOffset,
         rates: action.rates
       }
-    case INIT_GRAPHIC_RATES: 
+    case INITIAL_APP: 
       return {
         ...state,
-        graphicRates: action.graphicRates
+        graphicRates: action.graphicRates,
+        rates: action.rates
       }
     default: 
       return state

@@ -7,9 +7,11 @@ class Layout extends Component {
   render() {
     return (
       <div className={classes.layout}>
-        <main>
+        <h1>Курсы валют</h1>
+
+        <div className={classes.layout__children}>
           {this.props.children}
-        </main>
+        </div>
 
         <div className={classes.navContainer}>
           <nav>

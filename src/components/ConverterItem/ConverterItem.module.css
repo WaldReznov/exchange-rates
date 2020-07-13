@@ -2,13 +2,39 @@
   display: flex; 
   align-items: center;
   justify-content: space-between;
+  flex-direction: column;
+}
+
+.converterText {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.converterText img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.converterText p{
+  margin: 0px 10px;
+}
+
+.converterText svg {
+  width: 24px;
+  height: 24px;
 }
 
 .input {
-  font-size: 16px;
+  font-size: 56px;
   height: 40px;
   padding: 10px;
   border-radius: 5px;
   outline: none;
-  border: 1px solid black;
+  border: none;
+  background: transparent;
+  color: #fff;
+  text-align: center;
 }

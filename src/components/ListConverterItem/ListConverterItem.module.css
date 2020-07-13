@@ -1,0 +1,40 @@
+.convertItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 10px;
+}
+
+.convertItem__info {
+  display: flex;
+}
+
+.convertItem__img {
+  position: relative;
+  background-position: center;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 15px;
+}
+
+.convertItem__img > img {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+}
+
+.convertItem__text__title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff; 
+  font-family: 'Roboto', sans-serif;
+}
+
+.convertItem__text__subtitle {
+  font-size: 14px;
+  color: #fff;  
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+}

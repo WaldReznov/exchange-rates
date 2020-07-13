@@ -2,7 +2,10 @@
   background: #222;
 }
 
-main {
+.layout__children {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: calc(100vh - 160px);
   padding-bottom: 160px;
 }
@@ -53,6 +56,13 @@ a.active:after {
 
 a.active {
   color: #f7be8e;
+}
+
+.layout__children > h1 {
+  font-size: 30px;
+  padding: 20px 0;
+  color: #fff;
+  text-align: center;
 }
 
 

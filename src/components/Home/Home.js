@@ -73,10 +73,11 @@ class Home extends Component {
       graphics = graphicRates.map(rate => {
         const labels = rate.map(item => item.date).reverse();
         const dates = rate.map(item => item.rate).reverse();
-        const title = rates.filter(item => item.iso === rate[0]['iso']);
+        const title = rate.find(item => item.iso === rate[0]['iso']);
+        console.log('TITLE', title);
         const data = this.laneData(labels, dates);
 
-        return this.lineGraphic(data, title[0]['name']);
+        return this.lineGraphic(data, title.name);
       })
     }
 

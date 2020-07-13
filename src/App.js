@@ -3,7 +3,7 @@ import classes from './App.module.css';
 import Converter from './components/Converter/Converter'
 
 import { connect } from 'react-redux';
-import { getAllRates, addToFavorite, getGraphicRates } from './store/actions/actionCreators';
+import { getAllRates, addToFavorite, getGraphicRates, initalApp } from './store/actions/actionCreators';
 import Courses from './components/Courses/Courses';
 import {Switch, Route} from 'react-router-dom'
 import Home from './components/Home/Home';
@@ -12,7 +12,7 @@ import Home from './components/Home/Home';
 class App extends Component{
 
   componentDidMount() {
-    this.props.getAllRates();
+    this.props.initalApp();
   }
 
   render() {
@@ -39,7 +39,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    getAllRates: () => dispatch(getAllRates()),
+    initalApp: () => dispatch(initalApp()),
     getGraphicRates: () => dispatch(getGraphicRates()),
     addToFavorite: (id, state) => dispatch(addToFavorite(id, state))
   }

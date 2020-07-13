@@ -1,29 +1,76 @@
-import { INIT_EXCHANGE_RATES, CONVERT_RATES, ADD_TO_FAVORITE, INIT_GRAPHIC_RATES } from "./actionTypes";
+import { INIT_EXCHANGE_RATES, CONVERT_RATES, ADD_TO_FAVORITE, INITIAL_APP, FROM_RATE, TO_RATE } from "./actionTypes";
 
-const URL_ALL_rates = 'https://developerhub.alfabank.by:8273/partner/1.0.0/public/nationalRates';
+const URL_ALL_RATES = 'https://developerhub.alfabank.by:8273/partner/1.0.0/public/nationalRates';
+const HOURS = 1;
+const DAYS = 1;
 
-export function getAllRates() {
-  return async dispatch => {
-    const rates = await fetch(URL_ALL_rates)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        return data.rates;
-      })
+export async function getAllRates() {
+  const time = isValidRatesTime(HOURS);
+  console.log('time!!!', time)
+  let rates;
 
-    const create = await createDb(rates);
-    console.log('createcreate', create)
-    
-    console.log('rates', [...rates]);
-    dispatch(initExchangeRates(rates))
-    dispatch(getGraphicRates())
-  }
+  if (time) {
+    rates = await getRatesFromDatabase();
+    if(JSON.stringify(rates) ===  JSON.stringify([])) {
+      removeRatesFromDatabase();
+      rates = await fetchRates(URL_ALL_RATES);
+      addRates(rates);
+      setRatesTime()
+    }
+  } else {
+    removeRatesFromDatabase();
+    rates = await fetchRates(URL_ALL_RATES);
+    console.log('rates', rates);
+    addRates(rates);
+    setRatesTime()
+  }  
+  
+  return rates;
 }
 
-export function initGraphicRates(graphicRates) {
+export async function getGraphicRates(currencyCodes) {
+  const time = isValidGraphicRatesTime(DAYS);
+  let graphicRates;
+
+  if (time) {
+    graphicRates = await getGraphicRatesFromDatabase();
+
+    if(JSON.stringify(graphicRates) ===  JSON.stringify([])) {
+      removeGraphicRatesFromDatabase();
+      const numbers = getNumbers();
+      const dates = numbers.map((item) => graphDate(item));
+      graphicRates = await Promise.all(dates.map(item => fetchRates(getGraphUrl(currencyCodes, item))))
+        .then(rates => {
+          const fetchRates = currencyCodes.map(itemRates => [].concat(...sortGraphicRates(rates, itemRates)));
+          return fetchRates;
+        });
+
+      console.log('graphicRatesgraphicRates', graphicRates);
+      addGraphicRates(graphicRates);
+      setGraphicTime();
+    }
+  } else {
+    removeGraphicRatesFromDatabase();
+    const numbers = getNumbers();
+    const dates = numbers.map((item) => graphDate(item));
+    graphicRates = await Promise.all(dates.map(item => fetchRates(getGraphUrl(currencyCodes, item))))
+      .then(rates => {
+        const fetchRates = currencyCodes.map(itemRates => [].concat(...sortGraphicRates(rates, itemRates)));
+        return fetchRates;
+      });
+
+    
+    addGraphicRates(graphicRates);
+    setGraphicTime();
+  }
+
+  return graphicRates;
+}
+
+export function dispatchInitalApp(rates, graphicRates) {
   return {
-    type: INIT_GRAPHIC_RATES,
+    type: INITIAL_APP,
+    rates,
     graphicRates
   }
 }
@@ -39,7 +86,7 @@ export function convertRate(value, rate, quantity) {
   console.log('convertRate')
   return (dispatch) => {
     let bynRate = value / quantity * rate;
-
+    console.log(`bynRate ${bynRate}`)
     dispatch(convertRates(bynRate))
   }
 }
@@ -82,31 +129,30 @@ export function getUrlConvertRates(rates) {
   return `https://www.nbrb.by/api/exrates/rates/${rates}?parammode=2`;
 }
 
-export function getGraphicRates() {
-  return async (dispatch) => {
-    const currencyCodes = [840, 978, 985];
-    const stringCurrencyCodes = currencyCodes.join(',');
-    const numbers = getNumbers();
-    const dates = numbers.map((item) => graphDate(item));
-    Promise.all(dates.map(item => getRates(stringCurrencyCodes, item))).then(rates => {
-      const fetchRates = currencyCodes.map(itemRates => [].concat(...sortGraphicRates(rates, itemRates)))
-      dispatch(initGraphicRates(fetchRates));
-    })
-  }
-}
-
 function sortGraphicRates(rates, code) {
   return rates !== undefined ? rates.map(item => item.filter(ii => ii.code === code)) : '';
 }
 
-async function getRates(currencyCodes, date) {
-  const rates = await fetch(getGraphUrl(currencyCodes, date))
+async function fetchRates(url) {
+  const rates = await fetch(url)
     .then((response) => {
       return response.json();
     })
     .then(data => data.rates)
       
+  rates.push(getBynRate())
+
   return rates;
+}
+
+function getBynRate() {
+  return {
+    rate: 1,
+    iso: 'BYN',
+    code: 1,
+    quantity: 1,
+    name: 'белорусский доллар'
+  }
 }
 
 function getNumbers() {
@@ -137,7 +183,7 @@ function getGraphUrl(currencyCodes, date) {
   return `https://developerhub.alfabank.by:8273/partner/1.0.1/public/nationalRates?currencyCode=${currencyCodes}&date=${date}`
 }
 
-function createDb(rates) {
+function createDb() {
   let dbReq = indexedDB.open('ExchangeRates', 1);
   dbReq.onupgradeneeded = (event) => {
     // Зададим переменной db ссылку на базу данных
@@ -157,6 +203,28 @@ const addRates = (rates) => {
     rates.forEach(item => {
       store.add(item);
     })
+  }
+}
+
+function removeRatesFromDatabase() {
+  let dbReq = indexedDB.open('ExchangeRates', 1);
+
+  dbReq.onsuccess = async (event) => {
+    const db = event.target.result;
+    let transaction = db.transaction('rates', 'readwrite');
+    let store = transaction.objectStore('rates');
+    store.clear()
+  }
+}
+
+function removeGraphicRatesFromDatabase() {
+  let dbReq = indexedDB.open('ExchangeRates', 1);
+  
+  dbReq.onsuccess = async (event) => {
+    const db = event.target.result;
+    let transaction = db.transaction('graphicRates', 'readwrite');
+    let store = transaction.objectStore('graphicRates');
+    store.clear()
   }
 }
 
@@ -180,7 +248,7 @@ function getGraphicRatesFromDatabase() {
       const db = event.target.result;
       let transaction = db.transaction('graphicRates', 'readwrite');
 
-      transaction.objectStore('rates').getAll().onsuccess = (event) => {
+      transaction.objectStore('graphicRates').getAll().onsuccess = (event) => {
         resolve(event.target.result)
       };
     }
@@ -210,37 +278,70 @@ function getRatesFromDatabase() {
 	return promise;
 }
 
-export const initalApp = () => {
+export function initalApp() {
   return async (dispatch, getState) => {
+    console.time();
+    let promise = new Promise(function(resolve, reject) {
+      resolve(createDb())
+    });
 
-    const isValidTime = isValidTime();
+    promise.then(async data => {
+      const currencyCodes = getState().rates.currencyCodes;
+      const rates = await getAllRates();
+      const graphicRates = await getGraphicRates(currencyCodes);
+      dispatch(dispatchInitalApp(rates, graphicRates));
+      console.log('CONSOLE FR OM DB', console.timeEnd());
+    })
 
-    if(isValidTime === false) {
-      const rates = await fetchRates();
-    }
+    // const currencyCodes = getState().rates.currencyCodes;
+
+    // const time = isValidRatesTime(HOURS);
+
+    // if (time === true) {
+    //   const rates = await getRatesFromDatabase()
+    //   console.log('rates', rates)
+    //   const graphicRates = await getGraphicRatesFromDatabase()
+    //   dispatch(dispatchInitalApp(rates, graphicRates));
+
+    //   console.log('CONSOLE FR OM DB', console.timeEnd());
+    //   // получаем данные из дб
+    // } else {
+    //   createDb()
+    //   const rates = await getAllRates();
+    //   const graphicRates = await getGraphicRates(currencyCodes);
+    //   dispatch(dispatchInitalApp(rates, graphicRates));
+    //   addRates(rates);
+    //   addGraphicRates(graphicRates);
+    //   setRatesTime()
+    //   console.log('rates', rates);
+    //   console.log('graphicRates', graphicRates)
+    //   console.log('CONSOLE FROM FETCH', console.timeEnd());
+
+    //   // Делаем фетч
+    // }
 
   }
 }
 
-async function fetchRates() {
-  const rates = await fetch(URL_ALL_rates)
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      return data.rates;
-    })
+// async function fetchRates() {
+//   const rates = await fetch(URL_ALL_RATES)
+//     .then((response) => {
+//       return response.json();
+//     })
+//     .then((data) => {
+//       return data.rates;
+//     })
 
-  return rates;
-}
+//   return rates;
+// }
 
-function isValidTime() {
-  const localDate = localStorage.getItem('date');
+function isValidRatesTime(hours) {
+  const localDate = localStorage.getItem('RatesDate');
 
   if (localDate !== null) {
     let startDate = new Date(localDate);
     let endDate = new Date();
-    startDate.setHours(startDate.getHours() + 1);
+    startDate.setHours(startDate.getHours() + hours);
 
     if (startDate > endDate) {
       return true;
@@ -250,10 +351,39 @@ function isValidTime() {
   return false;
 }
 
+
+function isValidGraphicRatesTime(days) {
+  const localDate = localStorage.getItem('GraphicDate');
+
+  if (localDate !== null) {
+    let startDate = new Date(localDate);
+    let endDate = new Date();
+    startDate.setDate(startDate.getDate() + days);
+
+    if (startDate > endDate) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function setGraphicTime() {
+  const nowDate = new Date();
+  const graphicDate = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate());
+  localStorage.setItem('GraphicDate', graphicDate.toISOString());
+}
+
+function setRatesTime() {
+  localStorage.setItem('RatesDate', new Date().toISOString());
+}
+
 function getData() {
   const isValidTime = isValidTime();
 
-  if(isValidTime === true) {
- 
+  if (isValidTime === true) {
+    // получаем данные из дб
+  } else {
+    // Делаем фетч
   }
 }
