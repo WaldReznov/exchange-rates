@@ -23,7 +23,7 @@
 }
 
 .ListConverter__active {
-  top: 40px ;
+  top: 80px;
 }
 
 .ListConverter > h2 {
@@ -60,6 +60,6 @@
 
 
 .ListConverter__rates {
-  height: 100%;
+  height: calc(100vh - 150px);
   overflow-y: auto;
 }

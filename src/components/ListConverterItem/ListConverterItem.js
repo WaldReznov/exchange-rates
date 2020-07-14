@@ -1,8 +1,10 @@
 import React from 'react'
 import classes from './ListConverterItem.module.css';
 
-const ListConverterItem = ({name, iso, checked}) => {
+const ListConverterItem = (props) => {
   
+  const {name, iso, checked} = props.rate;
+  const {action, changeActive} = props;
   let check;
   
   if(checked) {
@@ -12,7 +14,10 @@ const ListConverterItem = ({name, iso, checked}) => {
   }
 
   return (
-    <div className={classes.convertItem}>
+    <div className={classes.convertItem} onClick={() => {
+      action(props.rate);
+      changeActive();
+    }}>
       <div className={classes.convertItem__info}>
         <div className={classes.convertItem__img}>
           <img src={`https://www.countryflags.io/${iso.slice(0, 2)}/flat/64.png`} />

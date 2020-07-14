@@ -288,52 +288,14 @@ export function initalApp() {
     promise.then(async data => {
       const currencyCodes = getState().rates.currencyCodes;
       const rates = await getAllRates();
+      dispatch(changeFromRate(rates[0]));
+      dispatch(changeToRate(rates[1]));
       const graphicRates = await getGraphicRates(currencyCodes);
       dispatch(dispatchInitalApp(rates, graphicRates));
       console.log('CONSOLE FR OM DB', console.timeEnd());
     })
-
-    // const currencyCodes = getState().rates.currencyCodes;
-
-    // const time = isValidRatesTime(HOURS);
-
-    // if (time === true) {
-    //   const rates = await getRatesFromDatabase()
-    //   console.log('rates', rates)
-    //   const graphicRates = await getGraphicRatesFromDatabase()
-    //   dispatch(dispatchInitalApp(rates, graphicRates));
-
-    //   console.log('CONSOLE FR OM DB', console.timeEnd());
-    //   // получаем данные из дб
-    // } else {
-    //   createDb()
-    //   const rates = await getAllRates();
-    //   const graphicRates = await getGraphicRates(currencyCodes);
-    //   dispatch(dispatchInitalApp(rates, graphicRates));
-    //   addRates(rates);
-    //   addGraphicRates(graphicRates);
-    //   setRatesTime()
-    //   console.log('rates', rates);
-    //   console.log('graphicRates', graphicRates)
-    //   console.log('CONSOLE FROM FETCH', console.timeEnd());
-
-    //   // Делаем фетч
-    // }
-
   }
 }
-
-// async function fetchRates() {
-//   const rates = await fetch(URL_ALL_RATES)
-//     .then((response) => {
-//       return response.json();
-//     })
-//     .then((data) => {
-//       return data.rates;
-//     })
-
-//   return rates;
-// }
 
 function isValidRatesTime(hours) {
   const localDate = localStorage.getItem('RatesDate');
@@ -378,12 +340,28 @@ function setRatesTime() {
   localStorage.setItem('RatesDate', new Date().toISOString());
 }
 
-function getData() {
-  const isValidTime = isValidTime();
+export function changeFromRate(rate) {
+  return (dispatch) => {
+    dispatch(dispatchFromRate(rate));
+  }
+}
 
-  if (isValidTime === true) {
-    // получаем данные из дб
-  } else {
-    // Делаем фетч
+export function changeToRate(rate) {
+  return (dispatch) => {
+    dispatch(dispatchToRate(rate));
+  }
+}
+
+export function dispatchFromRate(fromRate) {
+  return {
+    type: FROM_RATE,
+    fromRate
+  }
+}
+
+export function dispatchToRate(toRate) {
+  return {
+    type: TO_RATE,
+    toRate
   }
 }

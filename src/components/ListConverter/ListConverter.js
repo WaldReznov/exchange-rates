@@ -12,7 +12,7 @@ class ListConverter extends Component {
     this.props.isActive ? document.body.style.overflowY = 'hidden' : document.body.style.overflowY = 'auto'
 
     const rates = (this.props.rates.rates) ? this.props.rates.rates.map(item => {
-      return <ListConverterItem {...item} checked={iso === item.iso} />
+      return <ListConverterItem changeActive={changeActive} action={this.props.action} rate={item} checked={iso === item.iso} />
     }) : null;
   
     const listConverterClasses = `${classes.ListConverter} ${isActive}`

@@ -1,34 +1,52 @@
 .layout {
   background: #222;
+  min-height: 100vh;
+  position: relative;
+}
+
+.layout > h1 {
+  text-align: center;
+  color: #fff;
+  padding-top: 20px;
+  margin-bottom: 20px;
 }
 
 .layout__children {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 160px);
-  padding-bottom: 160px;
+  min-height: calc(100vh - 160px - 57px);
 }
 
+
 .navContainer {
-  background: #222;
+  transition: .5s ease-out;
   position: fixed;
-  bottom: 0;
+  bottom: -160px;
   left: 0;
   right: 0;
+}
+
+.navContainer__active {
+  bottom: 0px;
 }
 
 nav {
   background: #fff;
   border-radius: 40px;
-  height: 100px;
-  margin: 30px;
+  width: 360px;
+  height: 80px;
+  margin: 0 auto 30px auto;
 }
 
 ul {
   display: flex;
   justify-content: space-evenly;
-  padding: 40px;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 li {

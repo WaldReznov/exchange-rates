@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ConverterItem from '../ConverterItem/ConverterItem';
 import classes from './Converter.module.css'
 import { connect } from 'react-redux';
+import { changeFromRate, changeToRate } from '../../store/actions/actionCreators';
 import ListConverter from '../ListConverter/ListConverter';
 
 class Convereter extends Component {
@@ -14,22 +15,23 @@ class Convereter extends Component {
     console.log(this.props);
     const ratesTable = [];
 
-    let fromRate;
-    let toRate;
-    if(this.props.rates.rates !== null) {
-      // const rates = this.props.rates.rates.map((item, index) => {
-      //   return <ConverterItem key={index} {...item}/>
-      // })
-      // ratesTable.push(<ConverterItem iso={'BYN'} quantity={1} rate={1}/>)
-      // ratesTable.push([...rates])
-      let fromRateProps = this.props.rates.rates.find(item => item.iso === 'RUB');
-      let toRateProps = this.props.rates.rates.find(item => item.iso === 'USD');
-      fromRate = <ConverterItem {...fromRateProps} />;
+    const fromRate = <ConverterItem action={this.props.changeFromRate} {...this.props.rates.fromRate} />;
       
-      toRate = <ConverterItem {...toRateProps} />;
+    const toRate = <ConverterItem action={this.props.changeToRate} {...this.props.rates.toRate} />;
+    // if(this.props.rates.rates !== null) {
+    //   // const rates = this.props.rates.rates.map((item, index) => {
+    //   //   return <ConverterItem key={index} {...item}/>
+    //   // })
+    //   // ratesTable.push(<ConverterItem iso={'BYN'} quantity={1} rate={1}/>)
+    //   // ratesTable.push([...rates])
+    //   let fromRateProps = this.props.rates.rates.find(item => item.iso === 'RUB');
+    //   let toRateProps = this.props.rates.rates.find(item => item.iso === 'USD');
+    //   fromRate = <ConverterItem {...fromRateProps} />;
       
-      console.log(this.props.rates.rates.find(item => item.iso === 'USD'))
-    }
+    //   toRate = <ConverterItem {...toRateProps} />;
+      
+    //   console.log(this.props.rates.rates.find(item => item.iso === 'USD'))
+    // }
 
     return (
       <div className={classes.converter}>
@@ -58,4 +60,11 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, null)(Convereter);
+function mapDispatchToProps(dispatch) {
+  return {
+    changeFromRate: (rate) => dispatch(changeFromRate(rate)),
+    changeToRate: (rate) => dispatch(changeToRate(rate))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Convereter);

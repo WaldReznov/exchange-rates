@@ -5,6 +5,11 @@
   margin: 20px 10px;
 }
 
+.convertItem:focus,
+.convertItem:active {
+  background: rgba(128,128,128,.5);
+}
+
 .convertItem__info {
   display: flex;
 }

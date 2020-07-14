@@ -12,14 +12,24 @@
   margin-bottom: 20px;
 }
 
-.converterText img {
-  width: 24px;
-  height: 24px;
+.convertItem__img {
+  position: relative;
+  background-position: center;
+  height: 40px;
+  width: 40px;
   border-radius: 50%;
+  overflow: hidden;
+  margin-right: 15px;
+}
+
+.convertItem__img > img {
+  position: absolute;
+  top: -12px;
+  left: -12px;
 }
 
 .converterText p{
-  margin: 0px 10px;
+  margin-right: 15px;
 }
 
 .converterText svg {
@@ -29,8 +39,7 @@
 
 .input {
   font-size: 56px;
-  height: 40px;
-  padding: 10px;
+  width: 80%;
   border-radius: 5px;
   outline: none;
   border: none;
