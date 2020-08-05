@@ -15,9 +15,6 @@ class Layout extends Component {
   }
 
   handleScroll = () => {
-    console.log(` showMenu ${this.state.menuY > window.pageYOffset}`)
-    console.log(`state showMenu ${this.state.showMenu}`)
-    console.log(` menuY ${window.pageYOffset}`)
 
     const aa = this.state.menuY > window.pageYOffset;
 
@@ -35,11 +32,9 @@ class Layout extends Component {
   }
 
   render() {
-
     const isActive = this.state.showMenu ? classes.navContainer__active : '';
     const listConverterClasses = `${classes.navContainer} ${isActive}`
-    console.log(`this.props.showMenu ${this.props.showMenu}`)
-    console.log(`isActive ${isActive}`);
+
     return (
       <div className={classes.layout}>
         <h1>Курсы валют</h1>

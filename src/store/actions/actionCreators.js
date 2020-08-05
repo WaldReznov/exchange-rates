@@ -35,34 +35,22 @@ export async function getGraphicRates(currencyCodes) {
   if (time) {
     graphicRates = await getGraphicRatesFromDatabase();
 
-    if(JSON.stringify(graphicRates) ===  JSON.stringify([])) {
-      removeGraphicRatesFromDatabase();
-      const numbers = getNumbers();
-      const dates = numbers.map((item) => graphDate(item));
-      graphicRates = await Promise.all(dates.map(item => fetchRates(getGraphUrl(currencyCodes, item))))
-        .then(rates => {
-          const fetchRates = currencyCodes.map(itemRates => [].concat(...sortGraphicRates(rates, itemRates)));
-          return fetchRates;
-        });
-
-      console.log('graphicRatesgraphicRates', graphicRates);
-      addGraphicRates(graphicRates);
-      setGraphicTime();
+    if(JSON.stringify(graphicRates) !==  JSON.stringify([])) {
+      return graphicRates
     }
-  } else {
-    removeGraphicRatesFromDatabase();
-    const numbers = getNumbers();
-    const dates = numbers.map((item) => graphDate(item));
-    graphicRates = await Promise.all(dates.map(item => fetchRates(getGraphUrl(currencyCodes, item))))
-      .then(rates => {
-        const fetchRates = currencyCodes.map(itemRates => [].concat(...sortGraphicRates(rates, itemRates)));
-        return fetchRates;
-      });
+  } 
 
-    
-    addGraphicRates(graphicRates);
-    setGraphicTime();
-  }
+  removeGraphicRatesFromDatabase();
+  const numbers = getNumbers();
+  const dates = numbers.map((item) => graphDate(item));
+  graphicRates = await Promise.all(dates.map(item => fetchRates(getGraphUrl(currencyCodes, item))))
+    .then(rates => {
+      const fetchRates = currencyCodes.map(itemRates => [].concat(...sortGraphicRates(rates, itemRates)));
+      return fetchRates;
+    });
+
+  addGraphicRates(graphicRates);
+  setGraphicTime();
 
   return graphicRates;
 }
@@ -83,10 +71,8 @@ export function initExchangeRates(rates) {
 }
 
 export function convertRate(value, rate, quantity) {
-  console.log('convertRate')
   return (dispatch) => {
-    let bynRate = value / quantity * rate;
-    console.log(`bynRate ${bynRate}`)
+    const bynRate = value / quantity * rate;
     dispatch(convertRates(bynRate))
   }
 }
@@ -102,8 +88,6 @@ export function addToFavorite(id, favorite) {
 
       return item;
     })
-
-    console.log('updatedRates', updatedRates);
 
     const pageYOffset = window.pageYOffset;
     dispatch(addToFavoriteDispatch(updatedRates, pageYOffset))
@@ -285,7 +269,7 @@ export function initalApp() {
       resolve(createDb())
     });
 
-    promise.then(async data => {
+    promise.then(async () => {
       const currencyCodes = getState().rates.currencyCodes;
       const rates = await getAllRates();
       dispatch(changeFromRate(rates[0]));

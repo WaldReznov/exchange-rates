@@ -12,26 +12,11 @@ class Convereter extends Component {
   }
 
   render() {
-    console.log(this.props);
     const ratesTable = [];
 
     const fromRate = <ConverterItem action={this.props.changeFromRate} {...this.props.rates.fromRate} />;
       
     const toRate = <ConverterItem action={this.props.changeToRate} {...this.props.rates.toRate} />;
-    // if(this.props.rates.rates !== null) {
-    //   // const rates = this.props.rates.rates.map((item, index) => {
-    //   //   return <ConverterItem key={index} {...item}/>
-    //   // })
-    //   // ratesTable.push(<ConverterItem iso={'BYN'} quantity={1} rate={1}/>)
-    //   // ratesTable.push([...rates])
-    //   let fromRateProps = this.props.rates.rates.find(item => item.iso === 'RUB');
-    //   let toRateProps = this.props.rates.rates.find(item => item.iso === 'USD');
-    //   fromRate = <ConverterItem {...fromRateProps} />;
-      
-    //   toRate = <ConverterItem {...toRateProps} />;
-      
-    //   console.log(this.props.rates.rates.find(item => item.iso === 'USD'))
-    // }
 
     return (
       <div className={classes.converter}>

@@ -22,8 +22,6 @@ class ConvereterItem extends Component {
     this.setState({
       isActive: !this.state.isActive
     })
-
-    console.log(this.state.isActive);
   }
 
   render() {
@@ -37,9 +35,6 @@ class ConvereterItem extends Component {
     } 
 
     value = this.check(value);
-    console.log('props', this.props)
-
-    console.log(`iso ${iso}`);
 
     return (
       <div className={classes.converterItem}>
@@ -54,7 +49,7 @@ class ConvereterItem extends Component {
         </div>
         <input 
           autoFocus
-          type="number"
+          type="tel"
           className={classes.input}
           onChange={event => this.props.convertRate(+event.target.value, rate, quantity)} 
           value={+value}/>
