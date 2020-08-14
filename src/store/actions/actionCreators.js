@@ -170,9 +170,8 @@ function getGraphUrl(currencyCodes, date) {
 function createDb() {
   let dbReq = indexedDB.open('ExchangeRates', 1);
   dbReq.onupgradeneeded = (event) => {
-    // Зададим переменной db ссылку на базу данных
     const db = event.target.result;
-    // Создадим хранилище объектов с именем notes.
+
     db.createObjectStore('rates', {autoIncrement: true});
     db.createObjectStore('graphicRates', {autoIncrement: true});
 	}
@@ -276,7 +275,6 @@ export function initalApp() {
       dispatch(changeToRate(rates[1]));
       const graphicRates = await getGraphicRates(currencyCodes);
       dispatch(dispatchInitalApp(rates, graphicRates));
-      console.log('CONSOLE FR OM DB', console.timeEnd());
     })
   }
 }
